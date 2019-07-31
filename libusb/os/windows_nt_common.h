@@ -82,6 +82,7 @@ struct windows_backend {
 
 struct windows_context_priv {
 	const struct windows_backend *backend;
+	int ignore_hid_access_denied;
 };
 
 union windows_device_priv {

@@ -2055,6 +2055,16 @@ enum libusb_option {
 	 * Only valid on Windows.
 	 */
 	LIBUSB_OPTION_USE_USBDK,
+
+	/** Ignore access denied errors when opening a composite device with hid
+	 *
+	 * On Windows 10 version 1903 and later Windows blocks attempts to open HID
+	 * devices with a U2F usage unless running as administrator. This option allows
+	 * you to ignore these errors when opening a composite device.
+	 *
+	 * Only valid on Windows.
+	 */
+	LIBUSB_OPTION_IGNORE_HID_ACCESS_DENIED,
 };
 
 int LIBUSB_CALL libusb_set_option(libusb_context *ctx, enum libusb_option option, ...);

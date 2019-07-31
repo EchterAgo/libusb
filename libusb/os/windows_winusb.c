@@ -4088,6 +4088,8 @@ static int hid_copy_transfer_data(int sub_api, struct usbi_transfer *itransfer, 
 static int composite_open(int sub_api, struct libusb_device_handle *dev_handle)
 {
 	struct winusb_device_priv *priv = _device_priv(dev_handle->dev);
+	struct libusb_context* ctx = DEVICE_CTX(dev_handle->dev);
+	struct windows_context_priv* priv_ctx = (struct windows_context_priv*)ctx->os_priv;
 	int r = LIBUSB_ERROR_NOT_FOUND;
 	uint8_t i;
 	// SUB_API_MAX + 1 as the SUB_API_MAX pos is used to indicate availability of HID
@@ -4115,8 +4117,15 @@ static int composite_open(int sub_api, struct libusb_device_handle *dev_handle)
 		}
 	}
 
-	if (available[SUB_API_MAX]) // HID driver
+	if (available[SUB_API_MAX]) { // HID driver
 		r = hid_open(SUB_API_NOTSET, dev_handle);
+
+		/* Ignore LIBUSB_ERROR_ACCESS if flag is set */
+		if (r == LIBUSB_ERROR_ACCESS && priv_ctx->ignore_hid_access_denied > 0) {
+			usbi_dbg("ignoring access denied error while opening hid of composite device");
+			r = LIBUSB_SUCCESS;
+		}
+	}
 
 	return r;
 }

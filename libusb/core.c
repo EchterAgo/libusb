@@ -2203,6 +2203,7 @@ int API_EXPORTED libusb_set_option(libusb_context *ctx,
 
 	/* Handle all backend-specific options here */
 	case LIBUSB_OPTION_USE_USBDK:
+	case LIBUSB_OPTION_IGNORE_HID_ACCESS_DENIED:
 		if (usbi_backend.set_option)
 			r = usbi_backend.set_option(ctx, option, ap);
 		else

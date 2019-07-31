@@ -662,6 +662,9 @@ static int windows_init(struct libusb_context *ctx)
 	// By default, new contexts will use the WinUSB backend
 	priv->backend = &winusb_backend;
 
+	// By default, the HID accesss denied error is not ignored
+	priv->ignore_hid_access_denied = 0;
+
 	r = LIBUSB_SUCCESS;
 
 init_exit: // Holds semaphore here
@@ -716,6 +719,7 @@ static void windows_exit(struct libusb_context *ctx)
 static int windows_set_option(struct libusb_context *ctx, enum libusb_option option, va_list ap)
 {
 	struct windows_context_priv *priv = _context_priv(ctx);
+	int arg;
 
 	UNUSED(ap);
 
@@ -728,6 +732,12 @@ static int windows_set_option(struct libusb_context *ctx, enum libusb_option opt
 			usbi_err(ctx, "UsbDk backend not available");
 			return LIBUSB_ERROR_NOT_FOUND;
 		}
+		return LIBUSB_SUCCESS;
+	case LIBUSB_OPTION_IGNORE_HID_ACCESS_DENIED:
+		arg = va_arg(ap, int);
+		priv->ignore_hid_access_denied = arg;
+		if (arg > 0)
+			usbi_dbg("switching context %p to ignore HID access denied errors", ctx);
 		return LIBUSB_SUCCESS;
 	default:
 		return LIBUSB_ERROR_NOT_SUPPORTED;
