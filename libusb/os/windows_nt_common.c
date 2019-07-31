@@ -662,8 +662,8 @@ static int windows_init(struct libusb_context *ctx)
 	// By default, new contexts will use the WinUSB backend
 	priv->backend = &winusb_backend;
 
-	// By default, the HID accesss denied error is not ignored
-	priv->ignore_hid_access_denied = 0;
+	// By default, the HID accesss denied error is ignored
+	priv->ignore_hid_access_denied = 1;
 
 	r = LIBUSB_SUCCESS;
 
