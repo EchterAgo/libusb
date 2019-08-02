@@ -43,6 +43,7 @@ enum windows_version {
 };
 
 extern enum windows_version windows_version;
+extern int windows_build_number;
 
 /* This call is only available from Vista */
 extern BOOL (WINAPI *pCancelIoEx)(HANDLE, LPOVERLAPPED);

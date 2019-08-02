@@ -35,6 +35,7 @@
 // Public
 BOOL (WINAPI *pCancelIoEx)(HANDLE, LPOVERLAPPED);
 enum windows_version windows_version = WINDOWS_UNDEFINED;
+int windows_build_number = 0;
 
  // Global variables for init/exit
 static unsigned int init_count = 0;
@@ -411,6 +412,7 @@ static void get_windows_version(void)
 	BOOL ws;
 
 	windows_version = WINDOWS_UNDEFINED;
+	windows_build_number = 0;
 
 	memset(&vi, 0, sizeof(vi));
 	vi.dwOSVersionInfoSize = sizeof(vi);
@@ -479,6 +481,8 @@ static void get_windows_version(void)
 			w = "11 or later";
 		}
 	}
+
+	windows_build_number = vi.dwBuildNumber;
 
 	arch = is_x64() ? "64-bit" : "32-bit";
 
